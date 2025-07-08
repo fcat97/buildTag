@@ -17,7 +17,21 @@ class BuildTagPlugin implements Plugin<Project> {
 
         def buildTag = "${commitHash}-${uid}"
         project.ext.buildTag = buildTag
-        println "✅ Prepared build ID: ${project.ext.buildTag}"
+        // println "✅ Prepared build ID: ${project.ext.buildTag}"
+
+        // Add it to BuildConfig
+        project.plugins.withId('com.android.application') {
+            def version = project.android.defaultConfig.versionName
+            def tag = "${version}-${project.ext.buildTag}"
+            println "✅ adding BUILD_ID to BuildConfig: ${tag}"
+            project.android.defaultConfig.buildConfigField 'String', 'BUILD_ID', "\"${tag}\""
+        }
+
+        project.plugins.withId('com.android.library') {
+            def tag = project.ext.buildTag
+            println "✅ BUILD_ID --> BuildConfig: ${tag}"
+            project.android.defaultConfig.buildConfigField 'String', 'BUILD_ID', "\"${tag}\""
+        }
 
         project.afterEvaluate {
             // Git cleanliness check
@@ -41,7 +55,7 @@ class BuildTagPlugin implements Plugin<Project> {
             }
 
             // Wire into assembleRelease
-            project.tasks.matching { it.name == ext.runOnTask }.configureEach {
+            project.tasks.matching { ext.onTasks.contains(it.name) }.configureEach {
                 dependsOn(checkGitClean)
                 finalizedBy(tagGitRelease)
             }
