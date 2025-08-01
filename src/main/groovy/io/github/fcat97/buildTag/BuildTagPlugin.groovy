@@ -1,4 +1,4 @@
-package com.github.fcat97.buildTag
+package io.github.fcat97.buildTag
 
 
 import org.gradle.api.GradleException
