@@ -21,7 +21,7 @@ gradlePlugin {
             implementationClass = "${group}.buildTag.BuildTagPlugin"
             displayName = 'BuildTag Gradle Plugin'
             description = 'Add a unique git tag for each gradle build to track it without headache'
-            tags.set(['git', 'git-tag', 'gradle', 'java', 'kotlin', 'android', 'android-library'])
+            tags.set(['git', 'git-tag', 'automation', 'java', 'kotlin', 'android', 'android-library'])
         }
     }
 }
